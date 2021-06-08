@@ -1,0 +1,43 @@
+.jumbo {
+  background-image: linear-gradient(to right, #00a1ff, #7b0293);
+  color: #fff;
+}
+.jumbo2 {
+  background-image: linear-gradient(to right, #00a24b, #00a2ff);
+  color: #fff
+}
+.jumbo3 {
+  background-image: linear-gradient(to right, #22b2ff, #00bbab)
+}
+.user-p {
+  background-color: #ebf97c;
+}
+.user-p h1 {
+  padding-top: 3rem;
+}
+ .input-bg {
+   background-color: #eee;
+   font-weight: 600;
+   font-size: 1rem;
+ }
+ .drop {
+   color: #000;
+ }
+ .grey:hover {
+  background-color: #bbb;
+  color: #fff;
+ }
+ .bold {
+   font-weight: 600;
+ }
+.login-link {
+  font-size: 1rem;
+  font-weight: 600;
+}
+.pull-right {
+  float: right !important;
+}
+.name {
+  color: purple;
+  font-weight: 600;
+}
