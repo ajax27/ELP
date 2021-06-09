@@ -16,7 +16,7 @@ const InstructorIndex = () => {
   return (
     <InstructorRoute>
       <h1 className="p-5 bg-light jumbo mb-4 text-center">Instructor Page</h1>
-      <pre>{JSON.stringify(courses, null, 4)}</pre>
+      {/* <pre>{JSON.stringify(courses, null, 4)}</pre> */}
     </InstructorRoute>
   )
 }
