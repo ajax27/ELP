@@ -45,7 +45,7 @@ const Login = () => {
 
   return (
     <>
-      <h1 className="p-5 bg-light jumbo3 mb-4 text-center">Login</h1>
+      <h1 className="p-5 bg-light jumbotron jumbo3 mb-4 text-center">Login</h1>
       <div className="container col-md-4 offset-md-4 pb-5">
         <form onSubmit={handleSubmit}>
 

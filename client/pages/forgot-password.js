@@ -56,7 +56,7 @@ const ForgotPassword = () => {
 
   return (
     <>
-      <h1 className="text-center jumbo mb-3 p-5 bg-light">
+      <h1 className="text-center jumbotron jumbo mb-3 p-5 bg-light">
         Get Password Code
       </h1>
       <div className="container col-md-4 offset-md-4 pb-5">

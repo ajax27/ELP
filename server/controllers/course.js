@@ -83,3 +83,15 @@ export const create = async (req, res) => {
   }
 }
 
+export const read = async (req, res) => {
+  try {
+    const course = await Course
+      .findOne({ slug: req.params.slug })
+      .populate('Instructor', '_id name')
+      .exec()
+    res.json(course)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
