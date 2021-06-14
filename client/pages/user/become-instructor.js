@@ -25,7 +25,7 @@ const BecomeInstructor = () => {
 
   return (
     <>
-      <h1 className="p-5 bg-light jumbo3 mb-4 text-center">Become an Instructor</h1>
+      <h1 className="p-5 bg-light jumbo3 jumbotron mb-4 text-center">Become an Instructor</h1>
       <div className="container">
         <div className="row">
           <div className="col-md-6 offset-md-3 text-center">
@@ -34,7 +34,7 @@ const BecomeInstructor = () => {
               <br />
               <h2>Setup payments to publish courses on Ajax27 Learning</h2>
               <p className="lead bold text-info">
-                Ajax27 Dev partners with Stripe to transfer earnings to your bank account
+                Ajax27 Development partners with Stripe to transfer earnings to your bank account
               </p>
               <Button
                 type="primary"
