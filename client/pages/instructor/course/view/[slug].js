@@ -1,13 +1,20 @@
 import { useState, useEffect  } from 'react'
 import { useRouter } from 'next/router'
 import InstructorRoute from '../../../../components/routes/InstructorRoute'
+import AddLessonForm from '../../../../forms/AddLessonForm'
 import axios from 'axios'
-import { Avatar, Tooltip, Button } from 'antd'
-import { EditOutlined, CheckOutlined } from "@ant-design/icons"
+import { Avatar, Tooltip, Button, Modal } from 'antd'
+import { EditOutlined, CheckOutlined, UploadOutlined } from "@ant-design/icons"
 import ReactMarkdown from 'react-markdown'
 
 const CourseView = () => {
   const [course, setCourse] = useState({})
+  const [visible, setVisible] = useState(false)
+  const [values, setValues] = useState({
+    title: '',
+    content: '',
+    video: '',
+  })
 
   const router = useRouter()
   const { slug } = router.query
@@ -19,6 +26,11 @@ const CourseView = () => {
   const loadCourse = async () => {
     const { data } = await axios.get(`/api/course/${slug}`)
     setCourse(data)
+  }
+
+  const handleAddLesson = e => {
+    e.preventDefault()
+    console.log(values)
   }
 
   return (
@@ -45,6 +57,7 @@ const CourseView = () => {
                 </p>
               </div>
 
+
               <div className="d-flex media-right pt-4 p-4">
                 <Tooltip color="#FDBF06" title="Edit">
                   <Button ghost>
@@ -63,6 +76,20 @@ const CourseView = () => {
                 <ReactMarkdown children={course.description} />
               </div>
             </div>
+            <div className="row">
+              <Button
+                className="col-md-6 offset-md-3 text-center"
+                icon={<UploadOutlined className="align-top pt-1" />}
+                type="primary"
+                size="large"
+                shape="round"
+                onClick={() => setVisible(true)}>
+                Add Lesson
+              </Button>
+            </div>
+            <Modal onCancel={() => setVisible(false)} title="+ Add Lesson" centered visible={visible} footer={null}>
+              <AddLessonForm values={values} setValues={setValues} handleAddLesson={handleAddLesson} />
+            </Modal>
           </div>
         )}
       </div>
