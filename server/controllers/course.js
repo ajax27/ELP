@@ -1,7 +1,7 @@
 import AWS from 'aws-sdk'
 import { nanoid } from 'nanoid'
 import Course from '../models/course'
-import slugify from 'slugify'
+import { readFileSync } from 'fs'
 
 const awsConfig = {
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -90,6 +90,50 @@ export const read = async (req, res) => {
       .populate('Instructor', '_id name')
       .exec()
     res.json(course)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const uploadVideo = async (req, res) => {
+  try {
+    const { video } = req.files
+    if (!video) return res.status(400).send('No video supplied')
+    const params = {
+      Bucket: 'ajax27bucket',
+      Key: `${nanoid()}.${video.type.split('/')[1]}`,
+      Body: readFileSync(video.path),
+      ACL: 'public-read',
+      ContentType: video.type,
+    }
+    // upload to S3
+    S3.upload(params, (error, data) => {
+      if (error) {
+        console.log(error)
+        res.statusCode(400)
+      }
+      res.send(data)
+    })
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const removeVideo = async (req, res) => {
+  try {
+    const { Bucket, Key } = req.body
+    const params = {
+      Bucket,
+      Key,
+    }
+    // request image deletion from AWS S3
+    S3.deleteObject(params, (error, data) => {
+      if (error) {
+        console.log(error)
+        res.sendStatus(400)
+      }
+      res.send({ secure: true })
+    })
   } catch (error) {
     console.log(error)
   }

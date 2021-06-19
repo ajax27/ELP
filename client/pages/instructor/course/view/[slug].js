@@ -6,15 +6,19 @@ import axios from 'axios'
 import { Avatar, Tooltip, Button, Modal } from 'antd'
 import { EditOutlined, CheckOutlined, UploadOutlined } from "@ant-design/icons"
 import ReactMarkdown from 'react-markdown'
+import { toast } from 'react-toastify'
 
 const CourseView = () => {
   const [course, setCourse] = useState({})
   const [visible, setVisible] = useState(false)
+  const [progress, setProgress] = useState(0)
   const [values, setValues] = useState({
     title: '',
     content: '',
-    video: '',
+    video: {},
   })
+  const [uploading, setUploading] = useState(false)
+  const [uploadButtonText, setUploadButtonText] = useState('Upload Video')
 
   const router = useRouter()
   const { slug } = router.query
@@ -31,6 +35,43 @@ const CourseView = () => {
   const handleAddLesson = e => {
     e.preventDefault()
     console.log(values)
+  }
+
+  const handleVideo = async e => {
+    try {
+      const file = e.target.files[0]
+      setUploadButtonText(file.name)
+      setUploading(true)
+      const videoData = new FormData()
+      videoData.append('video', file)
+      // send video as form data with progress bar to backend
+      const { data } = await axios.post('/api/course/video-upload', videoData, {
+        onUploadProgress: e => {
+          setProgress(Math.round((100 * e.loaded) / e.total))
+        }
+      })
+      console.log(data)
+      setValues({ ...values, video: data })
+      setUploading(false)
+    } catch (error) {
+      console.log(error)
+      setUploading(false)
+      toast.error('Video Upload Failed')
+    }
+  }
+
+  const handleVideoRemove = async () => {
+    try {
+      setUploading(true)
+      const { data } = await axios.post('/api/course/video-remove', values.video)
+      setValues({ ...values, video: {} })
+      setUploading(false)
+      setUploadButtonText('Upload Another Video')
+    } catch (error) {
+      console.log(error)
+      setUploading(false)
+      toast.error('Failed to remove video')
+    }
   }
 
   return (
@@ -87,8 +128,17 @@ const CourseView = () => {
                 Add Lesson
               </Button>
             </div>
-            <Modal onCancel={() => setVisible(false)} title="+ Add Lesson" centered visible={visible} footer={null}>
-              <AddLessonForm values={values} setValues={setValues} handleAddLesson={handleAddLesson} />
+            <Modal onCancel={() => setVisible(false)} className="text-center text-uppercase" title="+ Add Lesson" centered visible={visible} footer={null}>
+              <AddLessonForm
+                values={values}
+                setValues={setValues}
+                uploading={uploading}
+                handleAddLesson={handleAddLesson}
+                uploadButtonText={uploadButtonText}
+                handleVideo={handleVideo}
+                progress={progress}
+                handleVideoRemove={handleVideoRemove}
+               />
             </Modal>
           </div>
         )}
