@@ -9,8 +9,8 @@ import { uploadImage, removeImage, create, read, uploadVideo, removeVideo } from
 router.post('/course/upload-image', requireSignin, uploadImage)
 router.post('/course/remove-image', requireSignin, removeImage)
 router.post('/course', requireSignin, isInstructor, create)
-router.post('/course/video-upload', requireSignin, formidable(), uploadVideo)
-router.post('/course/video-remove', requireSignin, removeVideo)
+router.post('/course/video-upload/:instructorId', requireSignin, formidable(), uploadVideo)
+router.post('/course/video-remove/:instructorId', requireSignin, removeVideo)
 
 router.get('/course/:slug', read)
 

@@ -1,6 +1,7 @@
 import AWS from 'aws-sdk'
 import { nanoid } from 'nanoid'
 import Course from '../models/course'
+import slugify from 'slugify'
 import { readFileSync } from 'fs'
 
 const awsConfig = {
@@ -87,7 +88,7 @@ export const read = async (req, res) => {
   try {
     const course = await Course
       .findOne({ slug: req.params.slug })
-      .populate('Instructor', '_id name')
+      .populate('instructor', '_id name')
       .exec()
     res.json(course)
   } catch (error) {
@@ -97,6 +98,11 @@ export const read = async (req, res) => {
 
 export const uploadVideo = async (req, res) => {
   try {
+    // console.log('req.user._id: ', req.user._id)
+    // console.log('req.params.instructorId: ', req.params.instructorId)
+    if (req.user._id !== req.params.instructorId) {
+      return res.status(400).send('Unauthorized')
+    }
     const { video } = req.files
     if (!video) return res.status(400).send('No video supplied')
     const params = {
@@ -121,6 +127,9 @@ export const uploadVideo = async (req, res) => {
 
 export const removeVideo = async (req, res) => {
   try {
+    if (req.user._id !== req.params.instructorId) {
+      return res.status(400).send('Unauthorized')
+    }
     const { Bucket, Key } = req.body
     const params = {
       Bucket,

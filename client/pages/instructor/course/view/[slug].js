@@ -11,7 +11,6 @@ import { toast } from 'react-toastify'
 const CourseView = () => {
   const [course, setCourse] = useState({})
   const [visible, setVisible] = useState(false)
-  const [progress, setProgress] = useState(0)
   const [values, setValues] = useState({
     title: '',
     content: '',
@@ -19,6 +18,7 @@ const CourseView = () => {
   })
   const [uploading, setUploading] = useState(false)
   const [uploadButtonText, setUploadButtonText] = useState('Upload Video')
+  const [progress, setProgress] = useState(0)
 
   const router = useRouter()
   const { slug } = router.query
@@ -45,7 +45,7 @@ const CourseView = () => {
       const videoData = new FormData()
       videoData.append('video', file)
       // send video as form data with progress bar to backend
-      const { data } = await axios.post('/api/course/video-upload', videoData, {
+      const { data } = await axios.post(`/api/course/video-upload/${course.instructor._id}`, videoData, {
         onUploadProgress: e => {
           setProgress(Math.round((100 * e.loaded) / e.total))
         }
@@ -63,7 +63,8 @@ const CourseView = () => {
   const handleVideoRemove = async () => {
     try {
       setUploading(true)
-      const { data } = await axios.post('/api/course/video-remove', values.video)
+      const { data } = await axios.post(`/api/course/video-remove/${course.instructor._id}`, values.video)
+      console.log(data)
       setValues({ ...values, video: {} })
       setUploading(false)
       setUploadButtonText('Upload Another Video')
