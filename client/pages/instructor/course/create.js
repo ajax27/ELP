@@ -90,7 +90,7 @@ const CourseCreate = () => {
           setValues={setValues}
           preview={preview}
           uploadImageText={uploadImageText}
-         />
+          />
       </div>
       <pre>{JSON.stringify(values, null, 4)}</pre>
       <hr />
