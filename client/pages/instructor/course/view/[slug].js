@@ -32,9 +32,20 @@ const CourseView = () => {
     setCourse(data)
   }
 
-  const handleAddLesson = e => {
+  const handleAddLesson = async e => {
     e.preventDefault()
-    console.log(values)
+    // console.log(values)
+    try {
+      const { data } = await axios.post(`/api/course/lesson/${slug}/${course.instructor._id}`, values)
+      setValues({ ...values, title: '', content: '', video: {} })
+      setVisible(false)
+      setUploadButtonText('Upload Video')
+      setCourse(data)
+      toast.success('Lesson added successfully')
+    } catch (error) {
+      console.log(error)
+      toast.error('Lesson upload failed, please try again')
+    }
   }
 
   const handleVideo = async e => {
@@ -78,6 +89,7 @@ const CourseView = () => {
   return (
     <InstructorRoute>
       <div className="container-fluid pt-4">
+      {/* <pre>{JSON.stringify(course, null, 4)}</pre> */}
         {course && (
           <div className="media row">
             <div className="col d-flex">
