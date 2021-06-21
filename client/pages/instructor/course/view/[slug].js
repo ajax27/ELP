@@ -3,10 +3,11 @@ import { useRouter } from 'next/router'
 import InstructorRoute from '../../../../components/routes/InstructorRoute'
 import AddLessonForm from '../../../../forms/AddLessonForm'
 import axios from 'axios'
-import { Avatar, Tooltip, Button, Modal } from 'antd'
+import { Avatar, Tooltip, Button, Modal, List } from 'antd'
 import { EditOutlined, CheckOutlined, UploadOutlined } from "@ant-design/icons"
 import ReactMarkdown from 'react-markdown'
 import { toast } from 'react-toastify'
+import Item from 'antd/lib/list/Item'
 
 const CourseView = () => {
   const [course, setCourse] = useState({})
@@ -102,15 +103,16 @@ const CourseView = () => {
               </div>
 
               <div className="media-body media-right text-center">
-                <h5 className="text-primary text-center pl-5 pt-4">{course.name}</h5>
+                <h2 className="text-primary text-center pl-5 pt-4">{course.name}</h2>
                 <p className="media-text">
                   {course.lessons && course.lessons.length} Lessons Completed
                 </p>
-                <p className="media-text middle" style={{ fontSize: "1rem" }}>
-                  {course.category}
+                <p
+                  className="media-text middle"
+                  style={{ fontSize: "1.4rem", paddingRight: '0.2rem', color: 'purple' }}>
+                  Category: {course.category}
                 </p>
               </div>
-
 
               <div className="d-flex media-right pt-4 p-4">
                 <Tooltip color="#FDBF06" title="Edit">
@@ -125,14 +127,16 @@ const CourseView = () => {
                 </Tooltip>
               </div>
             </div>
-            <div className="row">
-              <div className="col m-3" style={{ fontSize: '1.2rem' }}>
+
+            <div className="row media-right">
+              <div className="col m-3" style={{ fontSize: '1.2rem', paddingLeft: '8rem' }}>
                 <ReactMarkdown children={course.description} />
               </div>
             </div>
+
             <div className="row">
               <Button
-                className="col-md-6 offset-md-3 text-center"
+                className="col-md-6 offset-md-3 text-center mb-5"
                 icon={<UploadOutlined className="align-top pt-1" />}
                 type="primary"
                 size="large"
@@ -151,8 +155,26 @@ const CourseView = () => {
                 handleVideo={handleVideo}
                 progress={progress}
                 handleVideoRemove={handleVideoRemove}
-               />
+              />
             </Modal>
+
+            <br />
+            <hr />
+            <div className="row pb-5">
+              <div className="col lesson-list">
+                <h4 className="text-center">
+                  {course && course.lessons && course.lessons.length} Lessons
+                </h4>
+                <List
+                  itemLayout="horizontal"
+                  dataSource={course && course.lessons}
+                  renderItem={(item, index) => (
+                    <Item>
+                      <Item.Meta title={item.title} avatar={<Avatar>{index + 1}</Avatar>}></Item.Meta>
+                    </Item>
+                  )}></List>
+              </div>
+            </div>
           </div>
         )}
       </div>
