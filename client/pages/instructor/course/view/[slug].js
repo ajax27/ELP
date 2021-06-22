@@ -117,7 +117,7 @@ const CourseView = () => {
               <div className="d-flex media-right pt-4 p-4">
                 <Tooltip color="#FDBF06" title="Edit">
                   <Button ghost>
-                    <EditOutlined style={{ cursor: 'pointer' }} className="h5 text-warning" />
+                    <EditOutlined onClick={() => router.push(`/instructor/course/edit/${slug}`)} style={{ cursor: 'pointer' }} className="h5 text-warning" />
                   </Button>
                 </Tooltip>
                 <Tooltip color="#3F9A6F" className="ml-3" title="Publish">

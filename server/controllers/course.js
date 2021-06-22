@@ -84,6 +84,23 @@ export const create = async (req, res) => {
   }
 }
 
+export const updateCourse = async (req, res) => {
+  try {
+    const { slug } = req.params
+    const course = await Course.findOne({ slug }).exec()
+    console.log(req.user._id)
+    console.log(course.instructor)
+    if (req.user._id != course.instructor) {
+      return res.status(400).send('Unauthorized')
+    }
+    const updated = await Course.findOneAndUpdate({ slug }, req.body, { new: true }).exec()
+    res.json(updated)
+  } catch (error) {
+    console.log(error)
+    return res.status(400).send(error.message)
+  }
+}
+
 export const read = async (req, res) => {
   try {
     const course = await Course
@@ -148,7 +165,7 @@ export const removeVideo = async (req, res) => {
   }
 }
 
-export const aadLesson = async (req, res) => {
+export const addLesson = async (req, res) => {
   try {
     const { slug, instructorId } = req.params
     const { title, content, video } = req.body
