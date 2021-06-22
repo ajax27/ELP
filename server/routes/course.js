@@ -11,14 +11,17 @@ import {
   read,
   uploadVideo,
   removeVideo,
-  aadLesson } from '../controllers/course'
+  addLesson,
+  updateCourse } from '../controllers/course'
 
 router.post('/course/upload-image', requireSignin, uploadImage)
 router.post('/course/remove-image', requireSignin, removeImage)
 router.post('/course', requireSignin, isInstructor, create)
 router.post('/course/video-upload/:instructorId', requireSignin, formidable(), uploadVideo)
 router.post('/course/video-remove/:instructorId', requireSignin, removeVideo)
-router.post('/course/lesson/:slug/:instructorId', requireSignin, aadLesson)
+router.post('/course/lesson/:slug/:instructorId', requireSignin, addLesson)
+
+router.put('/course/:slug', requireSignin, updateCourse)
 
 router.get('/course/:slug', read)
 
