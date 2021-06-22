@@ -10,9 +10,7 @@ const CourseCreateForm = ({
   values,
   setValues,
   preview,
-  uploadImageText,
-  editPage = false,
- }) => {
+  uploadImageText }) => {
   const children = []
 
   for (let i = 9.99; i <= 100.00; i++) {
@@ -20,9 +18,7 @@ const CourseCreateForm = ({
   }
 
   return (
-    <>
-      {values && (
-      <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit}>
         <div className="form-group">
           <input
             type="text"
@@ -34,7 +30,7 @@ const CourseCreateForm = ({
           />
         </div>
 
-        <div className="form-group pt-4">
+        <div className="form-group pt-3">
           <textarea
             className="form-control"
             name="description"
@@ -45,7 +41,7 @@ const CourseCreateForm = ({
             ></textarea>
         </div>
 
-        <div className="form-row pt-4">
+        <div className="form-row pt-3">
           <div className="col">
             <div className="form-group">
               <Select
@@ -73,7 +69,7 @@ const CourseCreateForm = ({
           )}
         </div>
 
-        <div className="form-group pt-4 pb-2">
+        <div className="form-group pt-2">
           <input
             type="text"
             name="category"
@@ -103,12 +99,12 @@ const CourseCreateForm = ({
                 </Badge>
               )}
 
-
               {editPage && values.image && (
                 <Badge count="X" style={{ cursor: 'pointer', margin: '-0.001rem' }} onClick={handleImageRemove}>
                   <Avatar className="m-2" width={200} src={values.image.Location} />
                 </Badge>
               )}
+
             </div>
           </div>
         </div>
@@ -129,8 +125,6 @@ const CourseCreateForm = ({
           </div>
         </div>
       </form>
-      )}
-    </>
   )
 }
 
