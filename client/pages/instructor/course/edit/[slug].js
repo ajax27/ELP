@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { toast } from 'react-toastify'
-import { Avatar, List } from 'antd'
+import { Avatar, List, Tooltip, Button } from 'antd'
+import { DeleteOutlined } from '@ant-design/icons'
 import CourseCreateForm from '../../../../forms/CourseCreateForm'
 import InstructorRoute from '../../../../components/routes/InstructorRoute'
 import Resizer from 'react-image-file-resizer'
@@ -108,6 +109,15 @@ const CourseEdit = () => {
     toast.success('Lessons rearranged successfully')
   }
 
+  const handleDelete = async (index) => {
+    const answer = window.confirm('Are you sure you want to delete this lesson?')
+    if (!answer) return
+    let allLessons = values.lessons
+    const removedLesson = allLessons.splice(index, 1)
+    setValues({ ...values, lessons: allLessons })
+    const { data } = await axios.put(`/api/course/lesson/${removedLesson[0]._id}`)
+  }
+
   return (
     <InstructorRoute>
       <h1 className="p-5 bg-light jumbo mb-4 text-center">Update Course</h1>
@@ -144,6 +154,11 @@ const CourseEdit = () => {
                   <Item.Meta 
                     title={item.title} 
                     avatar={<Avatar>{index + 1}</Avatar>}></Item.Meta>
+                    <Tooltip  color="#ff0000" title="DELETE?">
+                      <Button ghost>
+                      <DeleteOutlined className="text-danger float-end mr-5" onClick={() => handleDelete(index)} />
+                      </Button>
+                    </Tooltip>
                 </Item>
               )}></List>
           </div>
