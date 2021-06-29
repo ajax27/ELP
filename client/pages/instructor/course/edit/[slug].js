@@ -39,9 +39,13 @@ const CourseEdit = () => {
   }, [slug])
 
   const loadCourse = async () => {
-    const { data } = await axios.get(`/api/course/${slug}`)
-    if (data) setValues(data)
-    if (data && data.image) setImage(data.image)
+    try {
+      const { data } = await axios.get(`/api/course/${slug}`)
+      if (data) setValues(data)
+      if (data && data.image) setImage(data.image)
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   const handleChange = e => {

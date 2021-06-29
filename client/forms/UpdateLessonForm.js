@@ -1,5 +1,6 @@
 import { Button, Progress, Tooltip } from 'antd'
 import { CloseCircleFilled } from '@ant-design/icons'
+import ReactPlayer from 'react-player'
 
 const UpdateLessonForm = ({
   current,
@@ -41,7 +42,7 @@ const UpdateLessonForm = ({
 
         {!uploading && current.video && current.video.Location && (
             <div className="d-flex justify-content-center">
-              video
+              <ReactPlayer controls url={current.video.Location} width="410px" height="240px" />
             </div>
           )}
 
@@ -50,7 +51,7 @@ const UpdateLessonForm = ({
         )}
 
         <div className="d-flex justify-content-center">
-          <span style={{ color: '#000' }} className="pt-2 badge">Preview</span>
+          <span style={{ color: '#000', backgroundColor: '#4ef4b7', letterSpacing: '1px', cursor: 'pointer' }} className="p-2 badge">Preview</span>
         </div>
 
         <Button
