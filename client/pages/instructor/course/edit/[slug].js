@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { toast } from 'react-toastify'
-import { Avatar, List, Tooltip, Button } from 'antd'
+import { Avatar, List, Tooltip, Button, Modal } from 'antd'
 import { DeleteOutlined } from '@ant-design/icons'
 import CourseCreateForm from '../../../../forms/CourseCreateForm'
+import UpdateLessonForm from '../../../../forms/UpdateLessonForm'
 import InstructorRoute from '../../../../components/routes/InstructorRoute'
 import Resizer from 'react-image-file-resizer'
 import { useRouter } from 'next/router'
@@ -24,6 +25,11 @@ const CourseEdit = () => {
   const [image, setImage] = useState({})
   const [preview, setPreview] = useState('')
   const [uploadImageText, setUploadImageText] = useState('Upload Image')
+  const [visible, setVisible] = useState(false)
+  const [current, setCurrent] = useState({})
+  const [uploadVideoText, setUploadVideoText] = useState('Upload Video')
+  const [progress, setProgress] = useState(0)
+  const [uploading, setUploading] = useState(false)
 
   const router = useRouter()
   const { slug } = router.query
@@ -109,14 +115,22 @@ const CourseEdit = () => {
     toast.success('Lessons rearranged successfully')
   }
 
-  const handleDelete = async (index) => {
+  const handleDelete = async index => {
     const answer = window.confirm('Are you sure you want to delete this lesson?')
     if (!answer) return
     let allLessons = values.lessons
-    const removedLesson = allLessons.splice(index, 1)
+    const removed = allLessons.splice(index, 1)
     setValues({ ...values, lessons: allLessons })
-    const { data } = await axios.put(`/api/course/lesson/${removedLesson[0]._id}`)
+    const { data } = await axios.put(`/api/course/${slug}/${removed[0]._id}`)
   }
+
+  /**
+   * lesson update functions
+   */
+
+  const handleVideo = () => {}
+
+  const handleLessonUpdate = () => {}
 
   return (
     <InstructorRoute>
@@ -135,7 +149,9 @@ const CourseEdit = () => {
           editPage={true}
           />
       </div>
+
       <hr />
+
       <div className="row pb-5 pt-3">
           <div className="col lesson-list">
             <h4 className="pb-3">
@@ -152,17 +168,38 @@ const CourseEdit = () => {
                   onDragStart={e => handleDrag(e, index)}
                   onDrop={e => handleDrop(e, index)}>
                   <Item.Meta 
-                    title={item.title} 
+                    title={item.title}
+                    onClick={() => {
+                      setVisible(true)
+                      setCurrent(item)
+                    }}
                     avatar={<Avatar>{index + 1}</Avatar>}></Item.Meta>
                     <Tooltip  color="#ff0000" title="DELETE?">
                       <Button ghost>
-                      <DeleteOutlined className="text-danger float-end mr-5" onClick={() => handleDelete(index)} />
+                        <DeleteOutlined className="text-danger float-end mr-5" onClick={() => handleDelete(index)} />
                       </Button>
                     </Tooltip>
                 </Item>
               )}></List>
           </div>
         </div>
+        <Modal 
+          title="Update Lesson"
+          className="text-center"
+          centered 
+          visible={visible} 
+          onCancel={() => setVisible(false)}
+          footer={null}
+          >
+            <UpdateLessonForm 
+              current={current} 
+              setCurrent={setCurrent}
+              handleVideo={handleVideo}
+              handleLessonUpdate={handleLessonUpdate}
+              uploadVideoText={uploadVideoText}
+              uploading={uploading}
+              progress={progress} />
+          </Modal>
     </InstructorRoute>
   )
 }
