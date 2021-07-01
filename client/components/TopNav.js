@@ -11,7 +11,8 @@ import {
   DashboardOutlined,
   UserAddOutlined,
   TeamOutlined,
-  VideoCameraAddOutlined } from '@ant-design/icons'
+  VideoCameraAddOutlined, 
+  SettingFilled} from '@ant-design/icons'
 import { Context } from '../context'
 
 const { Item, SubMenu, ItemGroup } = Menu
@@ -38,7 +39,7 @@ const TopNav = () => {
   }
 
   return (
-    <Menu mode="horizontal" className="mb-2" style={{ marginBottom: '-1.5px', fontWeight: '500' }} selectedKeys={[current]}>
+    <Menu mode="horizontal" className="" style={{ marginBottom: '-1.5px', fontWeight: '500' }} selectedKeys={[current]}>
       <Item onClick={e => setCurrent(e.key)} key="/" icon={<AppstoreOutlined />}>
         <Link href="/">
           <a className="align-middle">App</a>
@@ -75,7 +76,7 @@ const TopNav = () => {
         </>
       )}
 
-       {user && user.role && user.role.includes('Instructor') && (
+      {user && user.role && user.role.includes('Instructor') && (
         <Item onClick={e => setCurrent(e.key)} className="align-center" key="/instructor" icon={<TeamOutlined />}>
           <Link href="/instructor">
             <a className="align-middle">Instructor</a>
@@ -83,15 +84,15 @@ const TopNav = () => {
         </Item>
       )}
 
-     {user !== null && (
-        <SubMenu key='SubMenu' style={{ width: 156, marginRight: '0', textAlign: 'center', backgroundColor: '#00e5ff' }} title={user && user.name} className="pull-right">
+    {user !== null && (
+        <SubMenu key='SubMenu' icon={<SettingFilled className="align-middle" />} style={{ backgroundColor: '#00e5ff' }} title={user && user.name} className="username align-middle text-center">
           <ItemGroup className="text-center drop">
             <Item key='/user' className="text-center drop grey" icon={<DashboardOutlined />}>
               <Link className="drop" href="/user">
                 <a className="text-center align-middle">User Dashboard</a>
               </Link>
             </Item>
-            <Item onClick={logout} className="drop text-center grey" icon={<LogoutOutlined />}>
+            <Item key='logout' onClick={logout} className="drop text-center grey" icon={<LogoutOutlined />}>
               <span className="text-center align-middle">Account Logout</span>
             </Item>
           </ItemGroup>
