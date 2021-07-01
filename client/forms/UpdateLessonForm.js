@@ -1,4 +1,4 @@
-import { Button, Progress, Tooltip } from 'antd'
+import { Button, Progress, Switch } from 'antd'
 import { CloseCircleFilled } from '@ant-design/icons'
 import ReactPlayer from 'react-player'
 
@@ -14,6 +14,7 @@ const UpdateLessonForm = ({
 
   return (
     <div className="container pt-3">
+    {/* {JSON.stringify(current)} */}
       <form onSubmit={handleLessonUpdate}>
         <input
           type="text"
@@ -32,31 +33,37 @@ const UpdateLessonForm = ({
           value={current.content}
         ></textarea>
 
-        <div className="d-flex justify-content-center">
-          <label className="btn btn-dark col-md-8 m-2">
-            {uploadVideoText}
-            <input onChange={handleVideo} type="file" accept="video/*" hidden />
-          </label>
-          
-        </div>
-
         {!uploading && current.video && current.video.Location && (
             <div className="d-flex justify-content-center">
               <ReactPlayer controls url={current.video.Location} width="410px" height="240px" />
             </div>
           )}
 
+        <div className="d-flex justify-content-center">
+          <label className="btn btn-dark col-md-8 m-2">
+            {uploadVideoText}
+            <input onChange={handleVideo} type="file" accept="video/*" hidden />
+          </label>
+        </div>
+
         {progress > 0 && (
           <Progress className="d-flex justify-content-center pt-2 pb-2" percent={progress} steps={10} />
         )}
 
         <div className="d-flex justify-content-center">
-          <span style={{ color: '#000', backgroundColor: '#4ef4b7', letterSpacing: '1px', cursor: 'pointer' }} className="p-2 badge">Preview</span>
+          <span style={{ color: '#000', backgroundColor: '#4ef4b7', border: '1px solid #eee', letterSpacing: '1px' }} className="p-2 m-2 badge">PREVIEW</span>
+          <Switch 
+            className="pull-right mt-2 align-middle" 
+            disabled={uploading} 
+            defaultChecked={current.free_preview}
+            name="free_preview"
+            onChange={v => setCurrent({ ...current, free_preview: v })}
+            />
         </div>
 
         <Button
           onClick={handleLessonUpdate}
-          className="col-md-8 mt-2 btn btn-primary"
+          className="col-md-8 mt-3 ml-3 btn btn-primary"
           size="large"
           type="primary"
           loading={uploading}
