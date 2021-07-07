@@ -107,34 +107,87 @@ const CourseEdit = () => {
   }
 
   const handleDrop = async (e, index) => {
-    const movingItemIndex = e.dataTransfer.getData('itemIndex')
-    const targetItemIndex = index
-    let allLessons = values.lessons
-    let movingItem = allLessons[movingItemIndex] // targeted item to drag
-    allLessons.splice(movingItemIndex, 1)  // remove one item from index
-    allLessons.splice(targetItemIndex, 0, movingItem)  // push target item
+    try {
+      const movingItemIndex = e.dataTransfer.getData('itemIndex')
+      const targetItemIndex = index
+      let allLessons = values.lessons
+      let movingItem = allLessons[movingItemIndex] // targeted item to drag
+      allLessons.splice(movingItemIndex, 1)  // remove one item from index
+      allLessons.splice(targetItemIndex, 0, movingItem)  // push target item
 
-    setValues({ ...values, lessons: [...allLessons] })
-    const { data } = await axios.put(`/api/course/${slug}`, { ...values, image, })
-    toast.success('Lessons rearranged successfully')
+      setValues({ ...values, lessons: [...allLessons] })
+      const { data } = await axios.put(`/api/course/${slug}`, { ...values, image, })
+      toast.success('Lessons rearranged successfully')
+    } catch (error) {
+      console.log(error)
+      toast.error('Something went wrong')
+    }
   }
 
   const handleDelete = async index => {
-    const answer = window.confirm('Are you sure you want to delete this lesson?')
-    if (!answer) return
-    let allLessons = values.lessons
-    const removed = allLessons.splice(index, 1)
-    setValues({ ...values, lessons: allLessons })
-    const { data } = await axios.put(`/api/course/${slug}/${removed[0]._id}`)
+    try {
+      const answer = window.confirm('Are you sure you want to delete this lesson?')
+      if (!answer) return
+      let allLessons = values.lessons
+      const removed = allLessons.splice(index, 1)
+      setValues({ ...values, lessons: allLessons })
+      const { data } = await axios.put(`/api/course/${slug}/${removed[0]._id}`)
+      toast.success('Lesson successfully deleted')
+    } catch (error) {
+      console.log(error)
+      toast.error('Failed to delete lesson')
+    }
   }
 
   /**
    * lesson update functions
    */
 
-  const handleVideo = () => {}
+  const handleVideo = async e => {
+    try {
+      // remove video
+      if (current.video && current.video.Location) {
+        const res = await axios.post(`/api/course/video-remove/${values._id}`, current.video)
+        console.log('REMOVED ==> ', res)
+      }
+      const file = e.target.files[0]
+      setUploadVideoText(file.name)
+      setUploading(true)
+      // send video as form data
+      const videoData = new FormData()
+      videoData.append('video', file)
+      videoData.append('courseId', values._id)
+      // progress bar and send video as form data to backend
+      const { data } = await axios.post(`/api/course/video-upload/${values.instructor._id}`, videoData, {
+        onUploadProgress: e => setProgress(Math.round((100 * e.loaded) / e.total))
+      })
+      console.log(data)
+      setCurrent({ ...current, video: data })
+      setUploading(false)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
-  const handleLessonUpdate = () => {}
+  const handleLessonUpdate = async e => {
+    try {
+      e.preventDefault()
+      const { data } = await axios.post(`/api/course/lesson/${slug}/${current._id}`, current)
+      setUploadVideoText('Upload Video')
+      setProgress(0)
+      setVisible(false)
+      // update ui for lessons
+      if (data.secure) {
+        let arr = values.lessons
+        const index = arr.findIndex(el => el._id === current._id)
+        arr[index] = current
+        setValues({ ...values, lessons: arr })
+        toast.success('Lesson Updated')
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   return (
     <InstructorRoute>

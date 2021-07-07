@@ -7,7 +7,7 @@ const UserIndex = () => {
 
   return (
     <UserRoute>
-       <h1 className="text-center mb-4 p-5 jumbo user-p bg-primary">User Dashboard</h1>
+      <h1 className="text-center mb-4 p-5 jumbo user-p bg-primary">User Dashboard</h1>
     </UserRoute>
   )
 }

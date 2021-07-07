@@ -49,19 +49,19 @@ const CourseCreate = () => {
   }
 
   const handleImageRemove = async () => {
-     try {
-      setValues({ ...values, loading: true })
-      const res = await axios.post('/api/course/remove-image', { image })
-      setImage({})
-      setPreview('')
-      setUploadImageText('Upload Image')
-      setValues({ ...values, loading: false })
-    } catch (error) {
-      console.log(error)
-      setValues({ ...values, loading: false })
-      toast.error('Image upload failed, please try again with the right format')
-    }
+    try {
+    setValues({ ...values, loading: true })
+    const res = await axios.post('/api/course/remove-image', { image })
+    setImage({})
+    setPreview('')
+    setUploadImageText('Upload Image')
+    setValues({ ...values, loading: false })
+  } catch (error) {
+    console.log(error)
+    setValues({ ...values, loading: false })
+    toast.error('Image upload failed, please try again with the right format')
   }
+}
 
   const handleSubmit = async e => {
     e.preventDefault()

@@ -4,7 +4,7 @@ import InstructorRoute from '../../../../components/routes/InstructorRoute'
 import AddLessonForm from '../../../../forms/AddLessonForm'
 import axios from 'axios'
 import { Avatar, Tooltip, Button, Modal, List } from 'antd'
-import { EditOutlined, CheckOutlined, UploadOutlined } from "@ant-design/icons"
+import { EditOutlined, CheckOutlined, UploadOutlined, QuestionOutlined, CloseOutlined } from "@ant-design/icons"
 import ReactMarkdown from 'react-markdown'
 import { toast } from 'react-toastify'
 import Item from 'antd/lib/list/Item'
@@ -87,6 +87,32 @@ const CourseView = () => {
     }
   }
 
+  const handlePublish = async (e, courseId) => {
+    try {
+      let answer = window.confirm('Once you publish your course will be live in the marketplace and Users can enroll!')
+      if (!answer) return
+      const { data } = await axios.put(`/api/course/publish/${courseId}`)
+      setCourse(data)
+      toast.success('Congratulations, your course is live and available!')
+    } catch (error) {
+      console.log(error)
+      toast.error('Failed to publish course')
+    }
+  }
+
+  const handleUnPublish = async (e, courseId) => {
+    try {
+      let answer = window.confirm('If you Unpublish your course it will no longer be available for Users to enroll!')
+      if (!answer) return
+      const { data } = await axios.put(`/api/course/unpublish/${courseId}`)
+      setCourse(data)
+      toast.success('Course successfully Unpublished')
+    } catch (error) {
+      console.log(error)
+      toast.error('Failed to Unpublish course')
+    }
+  }
+
   return (
     <InstructorRoute>
       <div className="container-fluid pt-4">
@@ -120,11 +146,26 @@ const CourseView = () => {
                     <EditOutlined onClick={() => router.push(`/instructor/course/edit/${slug}`)} style={{ cursor: 'pointer' }} className="h5 text-warning" />
                   </Button>
                 </Tooltip>
-                <Tooltip color="#3F9A6F" className="ml-3" title="Publish">
-                  <Button ghost>
-                    <CheckOutlined style={{ cursor: 'pointer' }} className="h5 text-success pull-right" />
-                  </Button>
-                </Tooltip>
+
+                {course.lessons && course.lessons.length < 5 ? (
+                  <Tooltip color="#07c8ea" title="Minimum of 5 lessons to Publish">
+                    <Button ghost>
+                      <QuestionOutlined style={{ cursor: 'pointer' }} className="h5 text-info" />
+                    </Button>
+                  </Tooltip>
+                ) : course.published ? (
+                  <Tooltip color="#ff0000" title="Unpublish">
+                    <Button ghost>
+                      <CloseOutlined onClick={e => handleUnPublish(e, course._id)} style={{ cursor: 'pointer' }} className="h5 text-danger" />
+                    </Button>
+                  </Tooltip>
+                ) : (
+                  <Tooltip color="#3F9A6F" className="ml-3" title="Publish">
+                    <Button ghost>
+                      <CheckOutlined onClick={e => handlePublish(e, course._id)} style={{ cursor: 'pointer' }} className="h5 text-success pull-right" />
+                    </Button>
+                  </Tooltip>
+                )}
               </div>
             </div>
 
