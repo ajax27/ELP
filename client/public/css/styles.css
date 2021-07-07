@@ -1,3 +1,5 @@
+@import '~antd/dist/antd.css';
+
 .jumbo {
   background-image: linear-gradient(to right, #00a1ff, #7b0293);
   color: #fff;
@@ -16,21 +18,21 @@
 .user-p h1 {
   padding-top: 3rem;
 }
- .input-bg {
-   background-color: #eee;
-   font-weight: 600;
-   font-size: 1rem;
- }
- .drop {
-   color: #000;
- }
- .grey:hover {
-  background-color: #bbb;
-  color: #fff;
- }
- .bold {
-   font-weight: 600;
- }
+.input-bg {
+  background-color: #eee;
+  font-weight: 600;
+  font-size: 1rem;
+}
+.drop {
+  color: #000;
+}
+.grey:hover {
+background-color: #bbb;
+color: #fff;
+}
+.bold {
+  font-weight: 600;
+}
 .login-link {
   font-size: 1rem;
   font-weight: 600;

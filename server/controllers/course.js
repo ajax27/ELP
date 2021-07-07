@@ -198,3 +198,65 @@ export const removeLesson = async (req, res) => {
   }
 }
 
+export const updateLesson = async (req, res) => {
+  try {
+    const { slug } = req.params
+    const { _id, title, content, video, free_preview } = req.body
+    // find post
+    const course = await Course.findOne({ slug })
+      .select("instructor")
+      .exec()
+    // is owner?
+    if (req.user._id != course.instructor._id) {
+      return res.status(400).send("Unauthorized");
+    }
+
+    const updated = await Course.updateOne(
+      { "lessons._id": lessonId },
+      {
+        $set: {
+          "lessons.$.title": title,
+          "lessons.$.content": content,
+          "lessons.$.video": video,
+          "lessons.$.free_preview": free_preview,
+        },
+      }
+    ).exec();
+    console.log("updated => ", updated);
+    res.json({ secure: true });
+  } catch (err) {
+    console.log(err);
+    return res.status(400).send("Update lesson failed");
+  }
+}
+
+export const publishCourse = async (req, res) => {
+  try {
+    const { courseId } = req.params
+    const course = await Course.findById(courseId).select('instructor').exec()
+    if (req.user._id != course.instructor._id) {
+      return res.status(400).send("Unauthorized");
+    }
+    const updated = await Course.findByIdAndUpdate(courseId, { published: true }, { new: true }).exec()
+    res.json(updated)
+  } catch (error) {
+    console.log(error)
+    return res.status(400).send*'Failed to publish course'
+  }
+}
+
+export const unpublishCourse = async (req, res) => {
+  try {
+    const { courseId } = req.params
+    const course = await Course.findById(courseId).select('instructor').exec()
+    if (req.user._id != course.instructor._id) {
+      return res.status(400).send("Unauthorized");
+    }
+    const updated = await Course.findByIdAndUpdate(courseId, { published: false }, { new: true }).exec()
+    res.json(updated)
+  } catch (error) {
+    console.log(error)
+    return res.status(400).send*'Failed to unpublish course'
+  }
+}
+
